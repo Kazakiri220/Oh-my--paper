@@ -5,13 +5,17 @@
 </p>
 
 <p align="center">
-  <img src="./icons/icon.png" alt="Oh My Paper" width="120" height="120" />
+  <img src="./icons/icon.png" alt="Oh My Paper - mpacc-thesis-specialized" width="120" height="120" />
 </p>
 
-<h1 align="center">Oh My Paper</h1>
+<h1 align="center">Oh My Paper - mpacc-thesis-specialized</h1>
 
 <p align="center">
-  <strong>A research harness for Claude Code — turn your terminal into an autonomous research lab.</strong>
+  <strong>A Claude Code / Codex workspace specialized for MPAcc thesis writing.</strong>
+</p>
+
+<p align="center">
+  This project is an MPAcc thesis-writing specialized edition of <a href="https://github.com/LigphiDonk/Oh-my--paper">https://github.com/LigphiDonk/Oh-my--paper</a>.
 </p>
 
 <p align="center">
@@ -21,7 +25,7 @@
 <p align="center">
   <img src="https://img.shields.io/badge/claude--code-plugin-blueviolet?style=flat-square" />
   <img src="https://img.shields.io/badge/agents-5-ff69b4?style=flat-square" />
-  <img src="https://img.shields.io/badge/skills-34-green?style=flat-square" />
+  <img src="https://img.shields.io/badge/skills-MPAcc--focused-green?style=flat-square" />
   <img src="https://img.shields.io/badge/commands-8-blue?style=flat-square" />
   <img src="https://img.shields.io/badge/license-MIT-orange?style=flat-square" />
 </p>
@@ -32,7 +36,7 @@
 
 ```bash
 # In Claude Code:
-/plugin marketplace add LigphiDonk/Oh-my--paper
+/plugin marketplace add /path/to/Oh-My-Paper-mpacc-thesis-specialized
 /plugin install omp@oh-my-paper
 ```
 
@@ -45,10 +49,10 @@ Restart Claude Code. Run `/omp:setup` inside your MPAcc thesis project, then dri
 - [Why This Exists](#why-this-exists)
 - [Install](#install)
 - [Claude Code Slash Commands](#claude-code-slash-commands)
-- [The Agent Team](#the-agent-team)
-- [34 Research Skills](#34-research-skills)
+- [The MPAcc Agent Team](#the-mpacc-agent-team)
+- [MPAcc Thesis Skill Chain](#mpacc-thesis-skill-chain)
 - [Hooks](#hooks)
-- [Research Pipeline](#research-pipeline)
+- [MPAcc Thesis Pipeline](#mpacc-thesis-pipeline)
 - [Project Scaffold](#project-scaffold)
 - [How Memory Works](#how-memory-works)
 - [Codex Delegation](#codex-delegation)
@@ -62,17 +66,17 @@ Restart Claude Code. Run `/omp:setup` inside your MPAcc thesis project, then dri
 
 ## Why This Exists
 
-Claude Code is already a great coding agent. But **an MPAcc thesis is not just drafting text** — it requires topic standards, case evidence, literature survey, method fit, thesis writing, and reference checking.
+Claude Code is already a great coding agent. But **an MPAcc thesis is not just drafting text** — it requires topic standards, case evidence, literature survey, method fit, proposal writing, thesis chapters, reference checks, and defense preparation.
 
-Oh My Paper makes Claude Code **research-aware** by adding:
+Oh My Paper - mpacc-thesis-specialized organizes Claude Code / Codex around MPAcc thesis constraints:
 
 - **A structured 5-stage pipeline** — Survey → Topic Convergence → Evidence/Method Fit → Writing → Defense
-- **5 specialized agent roles** — each with isolated memory and clear responsibilities
-- **An MPAcc-specialized skill chain** — from topic hard gates to case evidence, writing, and quality review
+- **5 MPAcc agent roles** — orchestration, materials, evidence/method fit, writing, and review
+- **An MPAcc thesis skill chain** — from topic hard gates to case evidence, writing, citations, and defense
 - **Background hooks** — auto-inject project context at session start, prompt role selection, track task completion
 - **Codex delegation** — hand off parallel tasks to Codex in a separate terminal
 
-Install it and forget about it. Your sessions get smarter. Your research gets organized.
+Install it and forget about it. Your sessions get smarter. Your thesis progress stays organized.
 
 ---
 
@@ -81,7 +85,7 @@ Install it and forget about it. Your sessions get smarter. Your research gets or
 ### Step 1: Add the marketplace
 
 ```bash
-/plugin marketplace add LigphiDonk/Oh-my--paper
+/plugin marketplace add /path/to/Oh-My-Paper-mpacc-thesis-specialized
 ```
 
 ### Step 2: Install the plugin
@@ -124,9 +128,9 @@ cp -r /path/to/oh-my-paper/plugins/oh-my-paper/. \
 ### Install from Local Directory
 
 ```bash
-git clone https://github.com/LigphiDonk/Oh-my--paper.git /tmp/oh-my-paper
+git clone <this-specialized-repo-url> /tmp/oh-my-paper-mpacc
 # In Claude Code:
-/plugin marketplace add /tmp/oh-my-paper
+/plugin marketplace add /tmp/oh-my-paper-mpacc
 /plugin install omp@oh-my-paper
 ```
 
@@ -163,17 +167,17 @@ All commands are prefixed with `/omp:`.
 
 ---
 
-## The Agent Team
+## The MPAcc Agent Team
 
-When you open Claude Code in an Oh My Paper project, the `SessionStart` hook fires and Claude immediately asks which role you want to take on. Each role has **isolated memory** — it only reads and writes the files it needs.
+When you open Claude Code in an Oh My Paper - mpacc-thesis-specialized project, the `SessionStart` hook fires and Claude immediately asks which role you want to take on. Each role has **isolated memory** — it only reads and writes the files it needs.
 
 | Role | Responsibility | Memory Scope |
 |------|---------------|-------------|
-| **Conductor** | Global planning, review outputs, dispatch tasks, auto-update `project_truth` after each subtask | `project_truth` · `orchestrator_state` · `tasks.json` · `review_log` · `agent_handoff` · `decision_log` |
-| **Literature Scout** | Collect standards, case evidence, policy materials, and literature | `project_truth` · `execution_context` · `literature_bank` · `decision_log` |
-| **Evidence Driver** | Build evidence matrix, check method fit, judge writability | `execution_context` · `evidence_ledger` · `research_brief.json` · `project_truth` |
-| **Paper Writer** | Draft proposal, review, outline, chapters, figures, and citations | `execution_context` · `result_summary` · `literature_bank` · `agent_handoff` |
-| **Reviewer** | MPAcc quality gate, evidence-chain review, consistency check | `execution_context` · `project_truth` · `result_summary` |
+| **Conductor** | Uses `research-pipeline-planner` as controller; maintains stages, tasks, decisions, and quality gates | `project_truth` · `orchestrator_state` · `tasks.json` · `review_log` · `agent_handoff` · `decision_log` |
+| **Literature Scout** | Collects school topic standards, public case evidence, policy materials, and MPAcc literature | `project_truth` · `execution_context` · `literature_bank` · `decision_log` |
+| **Evidence Driver** | Builds the evidence matrix and checks method-material fit, chapter support, and writability | `execution_context` · `evidence_ledger` · `research_brief.json` · `project_truth` |
+| **Paper Writer** | Drafts proposal, literature review, outline, chapters, figures, and citation notes | `execution_context` · `result_summary` · `literature_bank` · `agent_handoff` |
+| **Reviewer** | Reviews topic hard gates, evidence chain, chapter logic, and citation integrity under MPAcc standards | `execution_context` · `project_truth` · `result_summary` |
 
 ### How It Works
 
@@ -195,33 +199,33 @@ Session opens
 
 ---
 
-## 34 Research Skills
+## MPAcc Thesis Skill Chain
 
-Skills are structured instruction sets that Claude loads on demand. Each skill is a markdown file covering a specific research task.
+Skills are structured instruction sets that Claude / Codex loads on demand. This specialized edition organizes skill descriptions around MPAcc topic selection, materials, method fit, writing, review, and defense.
 
 <details>
-<summary><strong>Click to expand the full skill list</strong></summary>
+<summary><strong>Click to expand the MPAcc skill chain</strong></summary>
 
-| Category | Skills |
-|----------|--------|
-| **Literature** | `paper-finder` · `paper-analyzer` · `paper-image-extractor` · `research-literature-trace` · `biorxiv-database` · `dataset-discovery` |
-| **Survey & Ideation** | `inno-deep-research` · `gemini-deep-research` · `inno-code-survey` · `inno-idea-generation` · `inno-idea-eval` · `research-idea-convergence` |
-| **Evidence & Method** | `mpacc-thesis-writer` · `research-idea-convergence` · `research-experiment-driver` |
-| **Writing** | `mpacc-thesis-writer` · `inno-paper-writing` · `inno-figure-gen` · `inno-reference-audit` · `research-paper-handoff` |
-| **Planning & Review** | `research-pipeline-planner` · `inno-pipeline-planner` · `inno-paper-reviewer` |
-| **Presentation** | `making-academic-presentations` · `inno-grant-proposal` |
-| **Agent Dispatch** | `claude-code-dispatch` · `codex-dispatch` |
-| **Domain-Specific** | `academic-researcher` · `bioinformatics-init-analysis` · `research-news` |
+| Category | Skills | Purpose |
+|----------|--------|---------|
+| **Control & Planning** | `research-pipeline-planner` · `inno-pipeline-planner` | Keep the five-stage pipeline, `research_brief.json`, and task tree aligned |
+| **MPAcc Standards** | `mpacc-thesis-writer` | Core rules for topic standards, case materials, chapter structure, method fit, citations, and defense |
+| **Topic Convergence** | `research-idea-convergence` · `mpacc-thesis-writer` | Converge a direction into an MPAcc topic that fits school standards and evidence conditions |
+| **Materials & Literature** | `inno-deep-research` · `academic-researcher` · `paper-finder` · `paper-analyzer` | Organize case evidence, policy materials, literature records, and research gaps |
+| **Writing & Figures** | `inno-paper-writing` · `mpacc-thesis-writer` · `inno-figure-gen` | Produce proposal, literature review, outline, chapters, case figures, and analysis tables |
+| **Review & Citations** | `inno-paper-reviewer` · `inno-reference-audit` · `mpacc-thesis-writer` | Check topic failures, evidence chain, chapter logic, citation integrity, and format risk |
+| **Defense Prep** | `making-academic-presentations` · `mpacc-thesis-writer` | Prepare defense outline, Q&A, oral script, and presentation materials |
+| **Agent Dispatch** | `claude-code-dispatch` · `codex-dispatch` | Delegate material organization, evidence checks, drafting, and citation review |
 
 </details>
 
-Skills are auto-recommended based on your current pipeline stage. Add project-local skills in the `skills/` directory.
+Skills are auto-recommended based on the current MPAcc thesis stage. Add project-local skills in the `skills/` directory.
 
 ---
 
 ## Hooks
 
-Oh My Paper registers three hooks that run in the background:
+Oh My Paper - mpacc-thesis-specialized registers three hooks that run in the background:
 
 | Hook | Trigger | What It Does |
 |------|---------|-------------|
@@ -233,9 +237,9 @@ Oh My Paper registers three hooks that run in the background:
 
 ---
 
-## Research Pipeline
+## MPAcc Thesis Pipeline
 
-A structured 5-stage workflow from idea to publication:
+A structured 5-stage workflow from topic selection to defense:
 
 ```
 ┌──────────┐    ┌──────────┐    ┌────────────┐    ┌─────────────┐    ┌───────────┐
@@ -255,7 +259,7 @@ Each stage comes with:
 `/omp:setup` creates this structure:
 
 ```
-my-research/
+my-mpacc-thesis/
 ├── paper/                  # LaTeX workspace
 │   ├── main.tex
 │   ├── sections/
@@ -344,7 +348,7 @@ If you're an AI agent installing this plugin:
 
 ```bash
 # Step 1: Add marketplace
-/plugin marketplace add LigphiDonk/Oh-my--paper
+/plugin marketplace add /path/to/Oh-My-Paper-mpacc-thesis-specialized
 
 # Step 2: Install plugin
 /plugin install omp@oh-my-paper
@@ -364,10 +368,10 @@ If you're an AI agent installing this plugin:
 
 ## Philosophy
 
-> **Enhance, don't replace.** Claude Code is already smart — we add research structure, not overrides.
+> **Enhance, don't replace.** Claude Code is already smart — this project adds MPAcc thesis structure, not overrides.
 
 - **Your context is for reasoning** — hooks inject only what's needed; memory files keep the rest on disk
-- **Domain-specific, not generic** — every skill, agent, and command is designed for academic research
+- **Domain-specific, not generic** — every skill, agent, and command is designed for MPAcc thesis writing
 - **Invisible when not needed** — hooks run in the background; no noise if you're just coding
 - **Composable** — use one command, use all of them, or just let the hooks do their thing
 - **Memory over repetition** — agents remember project context so you don't re-explain every session
@@ -386,7 +390,7 @@ Any change to cached content requires version bumps in **both**:
 
 ## Codex Support
 
-Oh My Paper also ships a **Codex plugin** (`oh-my-paper-codex`) that shares the same research harness concepts, agents, and skills as the Claude Code plugin.
+Oh My Paper - mpacc-thesis-specialized also ships a **Codex plugin** (`oh-my-paper-codex`) that shares the same MPAcc thesis harness concepts, agents, and skills as the Claude Code plugin.
 
 ### Install on Codex
 
@@ -394,8 +398,8 @@ Oh My Paper also ships a **Codex plugin** (`oh-my-paper-codex`) that shares the 
 
 ```bash
 # 1. Clone the repo
-git clone https://github.com/LigphiDonk/Oh-my--paper.git /tmp/oh-my-paper
-cd /tmp/oh-my-paper
+git clone <this-specialized-repo-url> /tmp/oh-my-paper-mpacc
+cd /tmp/oh-my-paper-mpacc
 
 # 2. One-command install
 ./scripts/install-codex-plugin.sh
@@ -405,8 +409,8 @@ cd /tmp/oh-my-paper
 
 ```powershell
 # 1. Clone the repo
-git clone https://github.com/LigphiDonk/Oh-my--paper.git $env:TEMP\oh-my-paper
-Set-Location $env:TEMP\oh-my-paper
+git clone <this-specialized-repo-url> $env:TEMP\oh-my-paper-mpacc
+Set-Location $env:TEMP\oh-my-paper-mpacc
 
 # 2. One-command install
 powershell -ExecutionPolicy Bypass -File .\scripts\install-codex-plugin.ps1
@@ -419,20 +423,20 @@ What the installer does:
 - Tries to call Codex directly so the plugin becomes installed and enabled immediately
 - Uses `node` under the hood, so make sure `node` is available on your `PATH`
 
-If `codex` is not available on your `PATH`, the script still registers the plugin and then tells you to finish the last step in Codex's Plugins page. If you search there, search for `Oh My Paper` or `oh-my-paper-codex`, not `omp`.
+If `codex` is not available on your `PATH`, the script still registers the plugin and then tells you to finish the last step in Codex's Plugins page. If you search there, search for `Oh My Paper - mpacc-thesis-specialized` or `oh-my-paper-codex`, not `omp`.
 
 ### Use in Codex CLI
 
-After installation, start Codex in your research project directory:
+After installation, start Codex in your MPAcc thesis project directory:
 
 ```bash
-cd /path/to/your/research-project
+cd /path/to/your/mpacc-thesis-project
 codex
 ```
 
 Then use one of these two patterns:
 
-- Ask naturally, for example: `Use Oh My Paper to initialize this research project and scaffold .pipeline/`
+- Ask naturally, for example: `Use Oh My Paper - mpacc-thesis-specialized to initialize this MPAcc thesis project and scaffold .pipeline/`
 - Reuse the workflow prompt templates under `plugins/oh-my-paper-codex/prompts/` by copying or adapting them inside the Codex session
 
 Codex CLI does **not** currently auto-register the files in `plugins/oh-my-paper-codex/prompts/` as slash commands, so `/omp-setup` and similar commands will **not** appear in the CLI command palette.
@@ -491,5 +495,5 @@ Special thanks to the **[Linux.do](https://linux.do)** community for your suppor
 ---
 
 <p align="center">
-  <strong>Oh My Paper</strong> — Where Research Meets the Terminal.
+  <strong>Oh My Paper - mpacc-thesis-specialized</strong> — MPAcc thesis writing, organized in the terminal.
 </p>
