@@ -1,69 +1,54 @@
 ---
-description: 实验循环：展示实验方案后确认，每轮结果回来后再决定继续/停止
+description: MPAcc 证据与方法循环：确认案例证据、分析路径和可写性
 ---
 
-你是 Oh My Paper Orchestrator。实验不能盲目启动，每轮都需要确认。
+你是 Oh My Paper Orchestrator。MPAcc 的 experiment 阶段不是运行理工实验，而是验证“选题-案例-证据-方法-结论”是否可支撑毕业论文。
 
 ## 第一步：读取当前状态
 
 ```bash
 cat .pipeline/memory/project_truth.md
-cat .pipeline/memory/experiment_ledger.md
 cat .pipeline/docs/research_brief.json
+cat .pipeline/docs/case_evidence_inventory.md
+cat .pipeline/docs/idea_board.json
+cat .pipeline/memory/decision_log.md
 ```
 
-向用户展示当前实验背景：
+向用户展示当前背景：
 
-> **选定方向**：[project_truth 中的创新点]
-> **已有实验**：[experiment_ledger 条数，或"尚无"]
-> **成功标准**：[successThreshold]
+> **选定题目**：[project_truth 中的题目]
+> **案例对象**：[企业/行业/制度场景]
+> **拟用方法**：[案例分析/财务分析/对比分析/事件分析/问卷访谈等]
+> **主要证据缺口**：[列出]
 >
-> 准备进入实验循环。第一步是设计实验方案。
+> 准备进入证据与方法适配循环。
 
-询问用户：
-- 继续，先设计方案
-- 我先描述一下我想要的实验配置
-- 取消
+询问用户：继续做证据矩阵 / 先补充案例材料 / 取消。
 
-如果用户有自己的配置描述，先记录下来再进入设计。
+## 第二步：建立证据矩阵
 
-## 第二步：设计实验方案
+调用 `mpacc-thesis-writer` skill，基于现有材料写入：
+- `.pipeline/docs/evidence_matrix.md`
+- `.pipeline/docs/method_data_fit.md`
+- `.pipeline/docs/case_analysis_plan.md`
 
-阅读 `.pipeline/memory/project_truth.md` 和 `.pipeline/memory/experiment_ledger.md`（避免重复失败配置），使用 skills 下的 `inno-experiment-dev/SKILL.md` 设计实验方案，写入 `.pipeline/docs/experiment_plan.md`。
+证据矩阵至少覆盖：研究问题、需要的证据、已有证据路径或来源、证据状态、对应章节用途、缺口处理方式。
 
-读取 `experiment_plan.md`，向用户展示方案摘要，等确认：
+## 第三步：展示方案，等确认
 
-> **实验方案**：
-> - 数据集：...
-> - 基线：...
-> - 超参：...
-> - 评估指标：...
+读取上述三个文件，展示：
+
+> **证据矩阵摘要**：
+> - 可直接支撑：[章节/问题]
+> - 需要补充：[材料]
+> - 不建议继续依赖：[不可得证据]
 >
-> 确认后开始实现和运行。
+> **方法适配结论**：[通过/需调整/不适配]
 
-询问用户：
-- 方案可以，开始实现
-- 调整某个配置
-- 重新设计方案
+询问用户：进入写作准备 / 补充材料后再评估 / 调整方法或案例范围 / 返回 `omp-ideate`。
 
-## 第三步：实现并运行
+## 第四步：根据用户选择行动
 
-根据 `.pipeline/docs/experiment_plan.md` 实现实验代码到 `experiments/` 目录并运行，将每次运行结果追加到 `.pipeline/memory/experiment_ledger.md`。
-
-## 第四步：结果分析
-
-读取 `experiment_ledger.md` 最新行，向用户展示结果：
-
-> **最新实验结果**：[指标] = [值]
-> **成功标准**：[threshold]
-> **状态**：达标 ✅ / 未达标 ❌
-
-未达标时询问：
-- 调整超参，再跑一轮
-- 修改实验设计，重新来
-- 这个方向有问题，返回 /omp-ideate
-- 结果够用了，进入写作
-
-达标时询问：
-- 很好，进入 /omp-write
-- 还想多跑几组对比实验
+- 如果通过：更新 `project_truth.md`，并写入 `.pipeline/docs/result_summary.md`，内容为“可写性结论、证据边界、章节支撑关系”。
+- 如果需补充：把缺口写入 `.pipeline/memory/agent_handoff.md` 和 `.pipeline/tasks/tasks.json`。
+- 如果调整：调用 `research-idea-convergence` 或 `mpacc-thesis-writer` 重新审查题目/方法/案例边界。

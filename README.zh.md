@@ -11,7 +11,7 @@
 <h1 align="center">Oh My Paper</h1>
 
 <p align="center">
-  <strong>Claude Code 科研 harness — 把你的终端变成自主科研实验室。</strong>
+  <strong>Claude Code MPAcc 论文 harness — 把你的终端变成会计专硕论文工作台。</strong>
 </p>
 
 <p align="center">
@@ -52,7 +52,7 @@
 - [项目结构](#项目结构)
 - [记忆系统](#记忆系统)
 - [Codex 任务委派](#codex-任务委派)
-- [远程实验](#远程实验)
+- [证据与方法适配](#证据与方法适配)
 - [给 AI Agent 看](#给-ai-agent-看)
 - [设计理念](#设计理念)
 - [贡献](#贡献)
@@ -62,13 +62,13 @@
 
 ## 为什么做这个
 
-Claude Code 是很强的编程 agent，但**科研不只是写代码** —— 还有文献调研、创新点评估、实验设计、论文撰写、引用核查，这些都需要特定领域的工作流。
+Claude Code 是很强的编程 agent，但**MPAcc 论文不只是写正文** —— 还有选题标准、案例证据、文献调研、方法适配、论文撰写、引用核查，这些都需要特定领域的工作流。
 
 Oh My Paper 让 Claude Code **理解科研**，提供：
 
-- **结构化 5 阶段流水线** — 调研 → 创意 → 实验 → 发表 → 推广
+- **结构化 5 阶段流水线** — 调研 → 选题收敛 → 证据与方法适配 → 写作 → 答辩
 - **5 个专职 agent 角色** — 各自有独立记忆和明确职责
-- **34 个内置研究技能** — 从论文搜索到图表生成
+- **MPAcc 特化技能链** — 从选题硬门槛到案例证据、正文写作和质量审查
 - **后台 hooks** — 每次开会话自动注入项目上下文、触发角色选择
 - **Codex 任务委派** — 把并行任务交给另一个终端里的 Codex 跑
 
@@ -142,22 +142,22 @@ Codex 插件目前**不会**在 Codex CLI 里自动注册 `/omp-*` 命令。
 | 命令 | 作用 |
 |------|------|
 | `/omp:setup` | 初始化研究项目——创建 `.pipeline/`、记忆文件，注册 SessionStart hook |
-| `/omp:survey` | AI 辅助文献调研——搜索论文，整理 `literature_bank.md` |
-| `/omp:ideate` | 基于调研结果生成并评估创新点 |
-| `/omp:experiment` | 设计实验、编写评估代码、在远程节点上运行 |
-| `/omp:write` | 撰写论文章节、生成图表和标题、管理 LaTeX 文件 |
-| `/omp:review` | 同行评审——提交前对论文或实验结果做质量把关 |
-| `/omp:delegate` | 生成 Codex prompt 委派代码/实验任务；等待结果后自动更新项目状态 |
+| `/omp:survey` | 收集选题标准、案例证据、政策材料和文献，整理 `literature_bank.md` |
+| `/omp:ideate` | 基于标准和证据生成、审查并收敛 MPAcc 论文题目 |
+| `/omp:experiment` | 建立证据矩阵，检查方法-材料适配和可写性 |
+| `/omp:write` | 撰写开题、综述、提纲、正文、图表和引用审查 |
+| `/omp:review` | 按 MPAcc 标准审查选题、证据链、结构和引用 |
+| `/omp:delegate` | 生成 Codex prompt 委派材料整理、证据核查、章节草拟或引用审查任务 |
 | `/omp:plan` | 查看全局进展，确认下一步方向，更新研究计划 |
 
 ### 典型用法
 
 ```bash
 /omp:setup          # 初始化项目
-/omp:survey         # 开始文献调研
-/omp:ideate         # 生成创新点
-/omp:experiment     # 设计并运行实验
-/omp:write          # 撰写论文
+/omp:survey         # 收集选题标准、案例材料和文献
+/omp:ideate         # 收敛 MPAcc 论文题目
+/omp:experiment     # 建证据矩阵并检查方法适配
+/omp:write          # 撰写开题、综述、提纲和正文
 /omp:review         # 最终质量把关
 ```
 
@@ -170,10 +170,10 @@ Codex 插件目前**不会**在 Codex CLI 里自动注册 `/omp-*` 命令。
 | 角色 | 职责 | 记忆范围 |
 |------|------|---------|
 | **Conductor（统筹者）** | 全局规划、评审产出、派发任务、每个子任务完成后自动更新 `project_truth` | `project_truth` · `orchestrator_state` · `tasks.json` · `review_log` · `agent_handoff` · `decision_log` |
-| **Literature Scout（文献侦察）** | 搜索论文、整理文献库 | `project_truth` · `execution_context` · `literature_bank` · `decision_log` |
-| **Experiment Driver（实验执行）** | 设计实验、编写代码、运行评估 | `execution_context` · `experiment_ledger` · `research_brief.json` · `project_truth` |
-| **Paper Writer（论文写手）** | 撰写章节、生成图表、审查引用 | `execution_context` · `result_summary` · `literature_bank` · `agent_handoff` |
-| **Reviewer（评审者）** | 同行评审、质量把关、一致性检查 | `execution_context` · `project_truth` · `result_summary` |
+| **Literature Scout（材料与文献侦察）** | 收集选题标准、案例证据、政策和文献 | `project_truth` · `execution_context` · `literature_bank` · `decision_log` |
+| **Evidence Driver（证据与方法适配）** | 建证据矩阵、检查方法适配和可写性 | `execution_context` · `evidence_ledger` · `research_brief.json` · `project_truth` |
+| **Paper Writer（论文写手）** | 撰写开题、综述、提纲、正文和引用审查 | `execution_context` · `result_summary` · `literature_bank` · `agent_handoff` |
+| **Reviewer（评审者）** | MPAcc 质量审查、证据链检查、一致性检查 | `execution_context` · `project_truth` · `result_summary` |
 
 ### 工作流
 
@@ -189,7 +189,7 @@ Codex 插件目前**不会**在 Codex CLI 里自动注册 `/omp-*` 命令。
 
 **关键设计：**
 
-- **记忆隔离** — 论文写手看不到统筹者的编排状态；文献侦察看不到实验结果。防止上下文污染，让每个 agent 保持专注。
+- **记忆隔离** — 论文写手看不到统筹者的编排状态；文献侦察看不到证据适配结论。防止上下文污染，让每个 agent 保持专注。
 - **共享状态** — `tasks.json` 和 `project_truth.md` 是所有角色的公共地带，每个子任务结束后更新。
 - **无需手动同步** — Conductor 在每个子任务完成后自动把 `tasks.json` 里的任务标为 `done`，并往 `project_truth.md` 追加进展记录，不需要你提醒。
 
@@ -206,9 +206,9 @@ Codex 插件目前**不会**在 Codex CLI 里自动注册 `/omp-*` 命令。
 |------|------|
 | **文献** | `paper-finder` · `paper-analyzer` · `paper-image-extractor` · `research-literature-trace` · `biorxiv-database` · `dataset-discovery` |
 | **调研与创意** | `inno-deep-research` · `gemini-deep-research` · `inno-code-survey` · `inno-idea-generation` · `inno-idea-eval` · `research-idea-convergence` |
-| **实验** | `inno-experiment-dev` · `inno-experiment-analysis` · `research-experiment-driver` · `remote-experiment` |
-| **写作** | `inno-paper-writing` · `ml-paper-writing` · `scientific-writing` · `inno-figure-gen` · `inno-reference-audit` · `research-paper-handoff` |
-| **规划与评审** | `inno-pipeline-planner` · `research-pipeline-planner` · `inno-paper-reviewer` · `inno-prepare-resources` · `inno-rclone-to-overleaf` |
+| **证据与方法** | `mpacc-thesis-writer` · `research-idea-convergence` · `research-experiment-driver` |
+| **写作** | `mpacc-thesis-writer` · `inno-paper-writing` · `inno-figure-gen` · `inno-reference-audit` · `research-paper-handoff` |
+| **规划与评审** | `research-pipeline-planner` · `inno-pipeline-planner` · `inno-paper-reviewer` |
 | **演示** | `making-academic-presentations` · `inno-grant-proposal` |
 | **Agent 派发** | `claude-code-dispatch` · `codex-dispatch` |
 | **领域专项** | `academic-researcher` · `bioinformatics-init-analysis` · `research-news` |
@@ -239,7 +239,7 @@ Oh My Paper 注册三个后台运行的 hook：
 
 ```
 ┌──────────┐    ┌──────────┐    ┌────────────┐    ┌─────────────┐    ┌───────────┐
-│  调研    │ →  │  创意    │ →  │    实验    │ →  │    发表     │ →  │   推广    │
+│  调研    │ →  │  选题    │ →  │  证据方法  │ →  │    写作     │ →  │   答辩    │
 │ Survey   │    │ Ideation │    │ Experiment │    │ Publication │    │ Promotion │
 └──────────┘    └──────────┘    └────────────┘    └─────────────┘    └───────────┘
 ```
@@ -261,10 +261,10 @@ my-research/
 │   ├── main.tex
 │   ├── sections/
 │   └── refs/
-├── experiment/             # 实验代码和脚本
-├── survey/                 # 文献调研产出
-├── ideation/               # 创新点、评估、计划
-├── promotion/              # 幻灯片、Demo、推广材料
+├── materials/              # 案例材料、选题标准、公开证据
+├── survey/                 # 选题标准、案例证据、文献调研产出
+├── ideation/               # 题目候选、硬门槛审查、取舍记录
+├── promotion/              # 答辩材料
 ├── skills/                 # 项目本地技能
 ├── .pipeline/
 │   ├── tasks/
@@ -289,8 +289,8 @@ my-research/
 ├── project_truth.md        # 项目基准 + 进展日志（每个子任务完成后追加）
 ├── orchestrator_state.md   # Conductor 的编排状态
 ├── execution_context.md    # 当前执行任务上下文（执行者看）
-├── experiment_ledger.md    # 实验历史和结果
-├── result_summary.md       # 最新结果（写作和评审用）
+├── evidence_ledger.md      # 证据核查历史
+├── result_summary.md       # 可写性结论（写作和评审用）
 ├── review_log.md           # 评审反馈历史
 ├── literature_bank.md      # 整理好的文献笔记
 ├── agent_handoff.md        # 角色间交接消息
@@ -308,7 +308,7 @@ my-research/
 
 ## Codex 任务委派
 
-Conductor 可以把代码和实验任务交给 Codex 执行：
+Conductor 可以把材料整理、证据核查、章节草拟和引用审查任务交给 Codex 执行：
 
 ```bash
 /omp:delegate
@@ -325,17 +325,17 @@ Conductor 可以把代码和实验任务交给 Codex 执行：
 
 ---
 
-## 远程实验
+## 证据与方法适配
 
-`remote-experiment` 技能 + `/omp:experiment` 支持完整的自动实验循环：
+`mpacc-thesis-writer` + `/omp:experiment` 支持 MPAcc 论文的证据与方法适配循环：
 
 ```
-设计方案 → 实现代码 → rsync 到服务器 → GPU 节点运行 → 解析指标 → 循环
+选定题目 → 建证据矩阵 → 检查方法适配 → 输出可写性结论 → 回写项目状态
 ```
 
-- 通过 `compute-helper` CLI 实现 SSH/rsync 远程计算
-- 可配置成功阈值、最大迭代次数、失败上限
-- 结果自动回写 `experiment_ledger.md`，供论文写手使用
+- 区分已获得、可公开获取、需用户补充、不可得证据
+- 明确每条证据支撑的章节与论证位置
+- 结论自动回写 `evidence_ledger.md` 和 `result_summary.md`，供论文写手使用
 
 ---
 

@@ -1,74 +1,55 @@
 ---
-description: 论文写作冲刺：按节确认后逐步推进，每节完成后展示再继续
+description: MPAcc 论文写作冲刺：开题、综述、提纲与正文按章推进
 ---
 
-你是 Oh My Paper Orchestrator。写作按节推进，每节完成后确认再继续。
+你是 Oh My Paper Orchestrator。写作按交付物和章节推进，每个关键节点完成后确认再继续。
 
 ## 第一步：确认写作范围
 
 ```bash
+cat .pipeline/memory/project_truth.md
 cat .pipeline/docs/result_summary.md
-ls sections/
+cat .pipeline/docs/evidence_matrix.md
+ls sections/ 2>/dev/null
 ```
 
 向用户展示：
 
-> **准备写作的章节**：
-> - [ ] abstract.tex
-> - [ ] introduction.tex
-> - [ ] related_work.tex
-> - [ ] methodology.tex
-> - [ ] experiments.tex
-> - [ ] conclusion.tex（可选）
+> **准备写作的内容**：
+> - [ ] 开题报告/选题说明
+> - [ ] 文献综述
+> - [ ] 论文大纲
+> - [ ] 正文章节：绪论、理论基础与文献、案例背景、问题分析、原因分析、对策建议、结论
+> - [ ] 引用与证据审查
 >
-> 已有文件：[列出 sections/ 下已存在的]
+> 已有文件：[列出 sections/ 或 docs/ 下已存在的]
 
-询问用户：
-- 全部从头写
-- 只写缺少的章节
-- 指定某几节
+询问用户：全部从头写 / 只写缺少的部分 / 指定某几章或交付物。
 
-## 第二步：按节逐步执行
+## 第二步：按交付物逐步执行
 
-每节开始前，先告知用户：
+每个部分开始前，先告知用户：
 
-> 现在写 **[节名]**，基于：[依赖的来源文件]
+> 现在写 **[部分名称]**，基于：[依赖的来源文件]
 
-**摘要 + 引言：**
-调用 `inno-paper-writing` skill，根据 `.pipeline/memory/project_truth.md` 和 `.pipeline/docs/result_summary.md`，写 `sections/abstract.tex` 和 `sections/introduction.tex`，不捏造数据。
+然后调用 `inno-paper-writing` skill。该 skill 会路由到 `mpacc-thesis-writer`，并优先使用学校选题标准与 MPAcc 论文写作规范。
 
-**相关工作：**
-调用 `inno-paper-writing` skill，基于 `.pipeline/memory/literature_bank.md`（Status=accepted），写 `sections/related_work.tex`，`\cite{key}` 引用必须存在于 `references.bib`。
+建议顺序：
+- 开题报告/选题说明：基于 `requirements_digest.md`、`project_truth.md`、`idea_board.json`。
+- 文献综述：基于 `literature_bank.md`，引用必须能在用户提供或可核验题录中找到。
+- 论文大纲：基于 `evidence_matrix.md` 和 `method_data_fit.md`。
+- 案例背景与问题分析：只使用已获得或可公开核验的案例证据。
+- 原因分析与对策建议：必须回扣研究问题与证据，不写泛泛管理建议。
+- 结论：明确研究结论、适用边界与不足。
 
-**方法论：**
-调用 `inno-paper-writing` skill，基于 `project_truth.md` 中的方法描述，写 `sections/methodology.tex`，包含必要数学公式。
-
-**实验与结果：**
-调用 `inno-paper-writing` skill，基于 `.pipeline/memory/experiment_ledger.md` 和 `result_summary.md`，写 `sections/experiments.tex`，使用真实数据。
-
-每节完成后，询问用户：
-
-> **[节名] 已完成**。你想：
-> - 继续写下一节
-> - 先看看这节写得怎么样
-> - 这节有问题，需要修改
-> - 暂停，稍后继续
+每部分完成后，询问用户：继续写下一部分 / 查看这部分 / 修改 / 暂停。
 
 ## 第三步：图表和引用
 
-所有节完成后，询问：
+所有指定内容完成后，询问用户：整理案例图表和分析表 / 直接做引用审查 / 两个都做。
 
-> 正文已完成。接下来：
-> - 生成图表（architecture diagram、结果对比图）
-> - 跳过图表，直接做引用审查
-> - 两个都做
+**图表：** 仅在证据允许时生成结构图、流程图、指标对比表、问题-原因-对策表。
 
-**图表：** 调用 `inno-figure-gen` skill，生成 2-3 个关键图表到 `assets/figures/`。
+**引用审查：** 调用 `inno-reference-audit` 或 `mpacc-thesis-writer/scripts/check_citations.py`，检查引用是否真实、可追溯、与正文主张一致。
 
-**引用审查：** 调用 `inno-reference-audit` skill，检查所有 `\cite{}` 引用，修复缺失条目。
-
-## 完成后
-
-询问用户：
-- 进入 `/omp-review` 做同行评审
-- 我自己先看看再说
+完成后询问用户是否进入 `omp-review` 做 MPAcc 质量审查。

@@ -1,8 +1,8 @@
 ---
-description: 审视全局进展，以问答形式确认下一步方向，更新研究计划
+description: 审视 MPAcc 论文全局进展，以问答形式确认下一步方向
 ---
 
-你是 Oh My Paper Orchestrator。先全面读取项目状态，再和用户一起决定接下来做什么。
+你是 Oh My Paper Orchestrator。先全面读取 MPAcc 论文项目状态，再和用户一起决定接下来做什么。
 
 ## 第一步：读取完整状态
 
@@ -12,7 +12,9 @@ cat .pipeline/memory/orchestrator_state.md
 cat .pipeline/tasks/tasks.json
 cat .pipeline/memory/review_log.md
 cat .pipeline/docs/research_brief.json
-cat .pipeline/memory/experiment_ledger.md
+cat .pipeline/memory/evidence_ledger.md
+cat .pipeline/docs/evidence_matrix.md
+cat .pipeline/docs/method_data_fit.md
 cat .pipeline/memory/decision_log.md
 ```
 
@@ -20,12 +22,12 @@ cat .pipeline/memory/decision_log.md
 
 向用户展示项目当前状态：
 
-> **项目**：[主题]
+> **论文方向/题目**：[主题]
 > **当前阶段**：[stage] — 进度 [X/Y 任务完成]
 >
 > **最近进展**：[1-2句话]
 >
-> **待解决**：[阻塞项或待审报告，如有]
+> **待解决**：[选题、证据、方法、章节或审查阻塞项，如有]
 >
 > **建议下一步**：[你认为最合适的下一步]
 

@@ -1,10 +1,10 @@
 ---
-description: 为代码/实验任务生成 Codex prompt，用户复制到新终端执行，结果自动落到共享文件
+description: 为 MPAcc 论文子任务生成 Codex prompt，用户复制到新终端执行，结果自动落到共享文件
 ---
 
 > **必须使用 AskUserQuestion 工具进行所有确认步骤，不得用纯文字替代。**
 
-你是 Oh My Paper 研究项目的 Orchestrator。此命令专用于需要 Codex 执行的**代码和实验任务**。
+你是 Oh My Paper MPAcc 论文项目的 Orchestrator。此命令专用于需要 Codex 执行的材料整理、证据核查、章节草拟、引用审查等子任务。
 
 ## 第一步：读取上下文
 
@@ -34,7 +34,7 @@ cat .pipeline/docs/research_brief.json
 
 ```
 [项目背景]
-研究主题：（project_truth.md 前 10 行）
+论文方向/题目：（project_truth.md 前 10 行）
 当前阶段：（research_brief.json 的 currentStage）
 
 [已否决方向 - 不要重蹈]
@@ -48,6 +48,7 @@ cat .pipeline/docs/research_brief.json
 
 [输出要求]
 完成后将结果摘要写入 .pipeline/memory/agent_handoff.md，
+不得编造学校要求、企业数据、访谈记录、内部材料、文献或引用。
 在文件末尾追加一行 <!-- CODEX_DONE -->
 ```
 

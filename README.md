@@ -36,7 +36,7 @@
 /plugin install omp@oh-my-paper
 ```
 
-Restart Claude Code. Run `/omp:setup` inside your research project, then drive the full pipeline with `/omp:survey`, `/omp:experiment`, and `/omp:write`. No GUI, no window-switching — everything in the terminal.
+Restart Claude Code. Run `/omp:setup` inside your MPAcc thesis project, then drive the full pipeline with `/omp:survey`, `/omp:ideate`, `/omp:experiment`, and `/omp:write`. No GUI, no window-switching — everything in the terminal.
 
 ---
 
@@ -52,7 +52,7 @@ Restart Claude Code. Run `/omp:setup` inside your research project, then drive t
 - [Project Scaffold](#project-scaffold)
 - [How Memory Works](#how-memory-works)
 - [Codex Delegation](#codex-delegation)
-- [Remote Experiments](#remote-experiments)
+- [Evidence And Method Fit](#evidence-and-method-fit)
 - [For LLM Agents](#for-llm-agents)
 - [Philosophy](#philosophy)
 - [Contributing](#contributing)
@@ -62,13 +62,13 @@ Restart Claude Code. Run `/omp:setup` inside your research project, then drive t
 
 ## Why This Exists
 
-Claude Code is already a great coding agent. But **research isn't just coding** — it's literature survey, idea evaluation, experiment design, paper writing, reference checking, and a dozen other things that require domain-specific workflows.
+Claude Code is already a great coding agent. But **an MPAcc thesis is not just drafting text** — it requires topic standards, case evidence, literature survey, method fit, thesis writing, and reference checking.
 
 Oh My Paper makes Claude Code **research-aware** by adding:
 
-- **A structured 5-stage pipeline** — Survey → Ideation → Experiment → Publication → Promotion
+- **A structured 5-stage pipeline** — Survey → Topic Convergence → Evidence/Method Fit → Writing → Defense
 - **5 specialized agent roles** — each with isolated memory and clear responsibilities
-- **34 built-in research skills** — from paper search to figure generation
+- **An MPAcc-specialized skill chain** — from topic hard gates to case evidence, writing, and quality review
 - **Background hooks** — auto-inject project context at session start, prompt role selection, track task completion
 - **Codex delegation** — hand off parallel tasks to Codex in a separate terminal
 
@@ -142,22 +142,22 @@ All commands are prefixed with `/omp:`.
 | Command | What It Does |
 |---------|-------------|
 | `/omp:setup` | Scaffold a new research project — creates `.pipeline/`, memory files, and registers the SessionStart hook |
-| `/omp:survey` | AI-assisted literature survey — search papers, build `literature_bank.md` |
-| `/omp:ideate` | Generate and evaluate research ideas based on survey findings |
-| `/omp:experiment` | Design experiments, write evaluation code, run on remote compute nodes |
-| `/omp:write` | Draft paper sections, generate figures and captions, manage LaTeX files |
-| `/omp:review` | Peer-review your paper or experiment results before submission |
-| `/omp:delegate` | Generate a Codex prompt for a coding/experiment task; wait for result and update project state |
+| `/omp:survey` | Collect topic standards, case evidence, policy materials, and literature |
+| `/omp:ideate` | Generate, screen, and converge MPAcc thesis topics |
+| `/omp:experiment` | Build the evidence matrix and check method-material fit |
+| `/omp:write` | Draft proposal, review, outline, chapters, figures, and citation checks |
+| `/omp:review` | Review topic gates, evidence chain, structure, and citations |
+| `/omp:delegate` | Generate a Codex prompt for evidence, drafting, or citation sub-tasks |
 | `/omp:plan` | Review global progress, confirm next steps, update research plan |
 
 ### Quick Start
 
 ```bash
 /omp:setup          # scaffold the project
-/omp:survey         # start literature survey
-/omp:ideate         # generate ideas from survey
-/omp:experiment     # design & run experiments
-/omp:write          # draft the paper
+/omp:survey         # collect standards, case materials, and literature
+/omp:ideate         # converge an MPAcc thesis topic
+/omp:experiment     # build evidence matrix and check method fit
+/omp:write          # draft proposal, review, outline, and chapters
 /omp:review         # final quality gate
 ```
 
@@ -170,10 +170,10 @@ When you open Claude Code in an Oh My Paper project, the `SessionStart` hook fir
 | Role | Responsibility | Memory Scope |
 |------|---------------|-------------|
 | **Conductor** | Global planning, review outputs, dispatch tasks, auto-update `project_truth` after each subtask | `project_truth` · `orchestrator_state` · `tasks.json` · `review_log` · `agent_handoff` · `decision_log` |
-| **Literature Scout** | Search papers, organize literature bank | `project_truth` · `execution_context` · `literature_bank` · `decision_log` |
-| **Experiment Driver** | Design experiments, write code, run evaluations | `execution_context` · `experiment_ledger` · `research_brief.json` · `project_truth` |
-| **Paper Writer** | Draft sections, generate figures, audit references | `execution_context` · `result_summary` · `literature_bank` · `agent_handoff` |
-| **Reviewer** | Peer review, quality gate, consistency check | `execution_context` · `project_truth` · `result_summary` |
+| **Literature Scout** | Collect standards, case evidence, policy materials, and literature | `project_truth` · `execution_context` · `literature_bank` · `decision_log` |
+| **Evidence Driver** | Build evidence matrix, check method fit, judge writability | `execution_context` · `evidence_ledger` · `research_brief.json` · `project_truth` |
+| **Paper Writer** | Draft proposal, review, outline, chapters, figures, and citations | `execution_context` · `result_summary` · `literature_bank` · `agent_handoff` |
+| **Reviewer** | MPAcc quality gate, evidence-chain review, consistency check | `execution_context` · `project_truth` · `result_summary` |
 
 ### How It Works
 
@@ -189,7 +189,7 @@ Session opens
 
 **Key design decisions:**
 
-- **Memory isolation** — the Paper Writer can't see the Conductor's orchestrator state; the Literature Scout can't see experiment results. This prevents context pollution.
+- **Memory isolation** — the Paper Writer can't see the Conductor's orchestrator state; the Literature Scout can't see method-fit conclusions. This prevents context pollution.
 - **Shared state** — `tasks.json` and `project_truth.md` are the common ground, updated by all roles after each subtask.
 - **No manual sync** — the Conductor auto-updates `tasks.json` (marks tasks `done`) and appends a progress entry to `project_truth.md` whenever a subtask completes, without waiting for you to ask.
 
@@ -206,9 +206,9 @@ Skills are structured instruction sets that Claude loads on demand. Each skill i
 |----------|--------|
 | **Literature** | `paper-finder` · `paper-analyzer` · `paper-image-extractor` · `research-literature-trace` · `biorxiv-database` · `dataset-discovery` |
 | **Survey & Ideation** | `inno-deep-research` · `gemini-deep-research` · `inno-code-survey` · `inno-idea-generation` · `inno-idea-eval` · `research-idea-convergence` |
-| **Experiment** | `inno-experiment-dev` · `inno-experiment-analysis` · `research-experiment-driver` · `remote-experiment` |
-| **Writing** | `inno-paper-writing` · `ml-paper-writing` · `scientific-writing` · `inno-figure-gen` · `inno-reference-audit` · `research-paper-handoff` |
-| **Planning & Review** | `inno-pipeline-planner` · `research-pipeline-planner` · `inno-paper-reviewer` · `inno-prepare-resources` · `inno-rclone-to-overleaf` |
+| **Evidence & Method** | `mpacc-thesis-writer` · `research-idea-convergence` · `research-experiment-driver` |
+| **Writing** | `mpacc-thesis-writer` · `inno-paper-writing` · `inno-figure-gen` · `inno-reference-audit` · `research-paper-handoff` |
+| **Planning & Review** | `research-pipeline-planner` · `inno-pipeline-planner` · `inno-paper-reviewer` |
 | **Presentation** | `making-academic-presentations` · `inno-grant-proposal` |
 | **Agent Dispatch** | `claude-code-dispatch` · `codex-dispatch` |
 | **Domain-Specific** | `academic-researcher` · `bioinformatics-init-analysis` · `research-news` |
@@ -239,7 +239,7 @@ A structured 5-stage workflow from idea to publication:
 
 ```
 ┌──────────┐    ┌──────────┐    ┌────────────┐    ┌─────────────┐    ┌───────────┐
-│  Survey  │ →  │ Ideation │ →  │ Experiment │ →  │ Publication │ →  │ Promotion │
+│  Survey  │ →  │  Topic   │ →  │ Evidence   │ →  │  Writing    │ →  │ Defense   │
 └──────────┘    └──────────┘    └────────────┘    └─────────────┘    └───────────┘
 ```
 
@@ -260,10 +260,10 @@ my-research/
 │   ├── main.tex
 │   ├── sections/
 │   └── refs/
-├── experiment/             # Experiment code & scripts
-├── survey/                 # Literature survey artifacts
-├── ideation/               # Ideas, evaluations, plans
-├── promotion/              # Slides, demos, outreach
+├── materials/              # Case materials, topic standards, public evidence
+├── survey/                 # Standards, case evidence, literature artifacts
+├── ideation/               # Topic candidates, hard-gate reviews, decisions
+├── promotion/              # Defense materials
 ├── skills/                 # Project-local skills
 ├── .pipeline/
 │   ├── tasks/
@@ -288,8 +288,8 @@ Each agent role reads and writes specific memory files. The Conductor is respons
 ├── project_truth.md        # Ground truth + progress log (appended after each subtask)
 ├── orchestrator_state.md   # Conductor's planning state
 ├── execution_context.md    # Current task context for executors
-├── experiment_ledger.md    # Experiment history & results
-├── result_summary.md       # Latest results for writing & review
+├── evidence_ledger.md      # Evidence audit history
+├── result_summary.md       # Writability conclusion for writing & review
 ├── review_log.md           # Review feedback history
 ├── literature_bank.md      # Organized paper notes
 ├── agent_handoff.md        # Cross-agent handoff messages
@@ -301,13 +301,13 @@ Each agent role reads and writes specific memory files. The Conductor is respons
 
 Memory survives across sessions. The `SessionStart` hook reads these files and injects the relevant context — you pick up right where you left off.
 
-**Auto-sync rule:** The Conductor updates `tasks.json` and `project_truth.md` automatically after every subtask completes (delegate / experiment / survey / write / review). You never need to ask it to sync.
+**Auto-sync rule:** The Conductor updates `tasks.json` and `project_truth.md` automatically after every subtask completes (delegate / evidence-fit / survey / write / review). You never need to ask it to sync.
 
 ---
 
 ## Codex Delegation
 
-The Conductor can hand off coding and experiment tasks to Codex:
+The Conductor can hand off evidence checks, drafting, citation audits, and material organization to Codex:
 
 ```bash
 /omp:delegate
@@ -324,17 +324,17 @@ The flow:
 
 ---
 
-## Remote Experiments
+## Evidence And Method Fit
 
-The `remote-experiment` skill + `/omp:experiment` support a full auto-experiment loop:
+The `mpacc-thesis-writer` skill + `/omp:experiment` support the MPAcc evidence and method-fit loop:
 
 ```
-Design plan → Implement code → rsync to server → Run on GPU → Parse metrics → Repeat
+Select topic → Build evidence matrix → Check method fit → Write writability conclusion → Sync state
 ```
 
-- SSH/rsync-based remote compute via `compute-helper` CLI
-- Configurable success thresholds, max iterations, and failure limits
-- Results flow back into `experiment_ledger.md` for the Paper Writer
+- Separate available, publicly accessible, user-needed, and unavailable evidence
+- Map each evidence item to thesis chapters and claims
+- Conclusions flow back into `evidence_ledger.md` and `result_summary.md` for the Paper Writer
 
 ---
 
